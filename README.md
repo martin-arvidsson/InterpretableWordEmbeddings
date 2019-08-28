@@ -24,7 +24,7 @@ install_tensorflow(
 
 ### Cloning repo and loading functions
 
-With Tensorflow and Tensorflow Probability installed, the second step is to clone the repo, and set it as working directory, i.e. by ```setwd()```. Then, load the functions of the repository:
+To use the code, clone the repo, set it as your working directory, i.e. by ```setwd()```, and load the functions of the repository:
 
 ```
 source('data.R')
@@ -35,11 +35,11 @@ source('model.R')
 
 ### Toy example
 
-To show how to use the code, we consider one of the priors described in the paper, and apply it to the freely available Gutenberg data (https://www.gutenberg.org/). It's a great resource, check it out! 
+To illustrate how to use the code, we consider one of the priors described in the paper, and apply it to the freely available Gutenberg data (https://www.gutenberg.org/). It's a great resource, check it out! 
 
 #### (1) Downloading, cleaning and preprocesessing
 
-As a first step, we (1.1) download the Gutenberg data using the R package ```gutenbergr```, (1.2) apply some rudimentary cleaning (e.g. remove non-alphanumeric characters, lower-case, etc.), and (1.3) prepare it for use within word embeddings (e.g. assign negative-sampling probabilities)
+As a first step, we (1.1) download the Gutenberg data using the R package ```gutenbergr```, (1.2) apply some rudimentary cleaning (e.g. remove non-alphanumeric characters, make it lower-case) and (1.3) process it for specific use with word embeddings (e.g. assign weighted negative-sampling probabilities)
 
 ```
 # (1.1) Download
