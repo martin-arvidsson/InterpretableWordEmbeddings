@@ -27,10 +27,10 @@ install_tensorflow(
 To use the code, clone the repo, set it as your working directory, i.e. by ```setwd()```, and load the functions of the repository:
 
 ```
-source('data.R')
-source('init.R')
-source('utils.R')
-source('model.R')
+source('src/data.R')
+source('src/init.R')
+source('src/utils.R')
+source('src/model.R')
 ```
 
 ### Toy example
@@ -53,7 +53,7 @@ The result is one long concatenated text string that collapses all sentences, bo
 
 #### (2) Define priors
 
-Second, we specify *which prior specification* that we want to use, and *which words* that we want to use for a particular prior specification. [Note: throughout, you'll see ```args``` appearing in the code. This is a list object storing various parameters. You can find they have been set in the ```init.R``` file]
+Second, we select *which prior specification* that we want to use, and *which words* that we want to use for a particular prior specification. [Note: throughout, you'll see ```args``` appearing in the code. This is a list object storing various parameters. You can find they have been set in the ```init.R``` file]
 
 **Prior types**:
 
