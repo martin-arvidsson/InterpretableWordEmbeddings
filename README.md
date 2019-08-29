@@ -1,6 +1,6 @@
 # InterpretableWordEmbeddings
 
-This repository implements models described in *''Interpretale Word Embeddings via Informative Priors''* (Hurtado Bodell, Arvidsson and Magnusson 2019). Below, an example of how to use the code is described.  
+This repository implements models described in *''Interpretale Word Embeddings via Informative Priors''* (Hurtado Bodell, Arvidsson and Magnusson, 2019). Below, an example of how to use the code is described.  
 
 <!--
 ## Example
@@ -24,13 +24,13 @@ install_tensorflow(
 
 ### Cloning repo and loading functions
 
-To use the code, clone the repo, and load all the functions from the repository:
+To use the code, clone the repo, set it as your working directory, i.e. by setwd(), and load the functions of the repository:
 
 ```
-source('.../src/data.R')
-source('.../src/init.R')
-source('.../src/utils.R')
-source('.../src/model.R')
+source('src/data.R')
+source('src/init.R')
+source('src/utils.R')
+source('src/model.R')
 ```
 
 ### Toy example
