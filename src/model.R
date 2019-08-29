@@ -66,7 +66,7 @@ anchored_embedding <- function(args, d){
   
   # Clip values for Truncated Prior
   # -----------------------------------------
-  if(args$prior_list[['prior_type']]==7){
+  if(args$prior_list[['prior_type']]==4){
     d_pos_idx <- d$prior_idx_dt[type=='d_pos_idx']$new_id
     d_neg_idx <- d$prior_idx_dt[type=='d_neg_idx']$new_id
     # RHO
@@ -149,7 +149,7 @@ anchored_embedding <- function(args, d){
     neutral_idx <- d$prior_idx_dt[type=='n_idx']$new_id
     # - discriminative words -
     # truncated
-    if(args$prior_list[['prior_type']]==7){
+    if(args$prior_list[['prior_type']]==4){
       d_pos_prior = tfp$distributions$TruncatedNormal(loc=0, low = 0, high = 10.0, scale=args$sigmas$sig_n)
       d_neg_prior = tfp$distributions$TruncatedNormal(loc=0, low = -10.0, high = 0, scale=args$sigmas$sig_n)
       d_zero_prior = tf$distributions$Normal(loc=0.0, scale=args$sigmas$sig_d_m)
@@ -202,7 +202,9 @@ anchored_embedding <- function(args, d){
   # - Context
   m$ctx_idx = tf$squeeze(input = tf$gather(params = m$words, indices = m$ctx_mask))
   m$ctx_alphas = tf$gather(params = m$alpha, indices = m$ctx_idx)
-  # - Natural parameter
+  
+  # Natural parameter
+  # -----------------------------------------
   ctx_sum = tf$reduce_sum(m$ctx_alphas, list(1L))
   m$p_eta = tf$expand_dims(input = tf$reduce_sum(tf$multiply(x = m$p_rho, y = ctx_sum),-1L),axis = 1L)
   m$n_eta = tf$reduce_sum(tf$multiply(x = m$n_rho, y = tf$tile(input = tf$expand_dims(input = ctx_sum,axis = 1L),multiples = list(1L,ns,1L))),-1L)
@@ -229,7 +231,7 @@ anchored_embedding <- function(args, d){
   # ========================================
   
   # Iter & epoch settings
-  epochs <- floor(length(d$text_int) / batch_size)       # currently: epochs is determined by the batch-size
+  epochs <- floor(length(d$text_int) / batch_size)       # currently: epochs determined by batch-size
   
   # Initialize?
   init_op = tf$global_variables_initializer()

@@ -36,7 +36,7 @@ source(paste0(src_folder,'model.R'))
 # (4) Download and clean random sample of Gutenberg books
 # -----------------------------------------------------------------
 # DL
-dl_sample_gutenberg(n = 30, category = 'Bestsellers, American, 1895-1923')
+dl_sample_gutenberg(n = 5, category = 'Bestsellers, American, 1895-1923')
 # Rudimentary cleaning
 works_sample <- basic_cleaning(mystring = works_sample)
 # -----------------------------------------------------------------
@@ -44,9 +44,9 @@ works_sample <- basic_cleaning(mystring = works_sample)
 
 # -----------------------------------------------------------------
 # (5) Process data for embedding model
-# - Replaces words with integer ids
-# - Calculates negative-sampling-probabilities for each term
-# - etc.
+# - Replace words with integer ids
+# - Derive vocabulary statistics
+# - Calculate negative-sampling-probabilities for each term
 # -----------------------------------------------------------------
 d <- process_text_string(text_string = works_sample, 
                          vocab_size = args$L)
@@ -65,19 +65,18 @@ d <- process_text_string(text_string = works_sample,
 args$prior_type <- 3
 
 # Example: Gender
-garg_pos = c('he', 'son', 'his', 'him', 'father',  'boy', 'himself', 'male', 'brother', 'men', 'uncl', 'nephew')
-garg_neg = c('she', 'daughter','femen','her', 'mother', 'girl', 'herself', 'femal', 'sister', 'women','aunt', 'niec')    
+pos = c('he', 'son', 'his', 'him', 'father',  'boy', 'himself', 'male', 'brother', 'men', 'uncl', 'nephew')
+neg = c('she', 'daughter','femen','her', 'mother', 'girl', 'herself', 'femal', 'sister', 'women','aunt', 'niec')    
 nltk_stopwords <- c('the','it', 'a','an','and','as','of','at','by')
 
 # Construct list storing information about prior
 args$prior_list <- list('prior_type' = args$prior_type,            # 1 = Strict Standard Basis, 2 = Weak Standard Basis, 3 = 2 + Neutral , 4 = Truncated + Neutral
-                        'categ1' = garg_pos,                       # Positive priors word types
-                        'categ2' = garg_neg,                       # Negative prior word types
+                        'categ1' = pos,                            # Positive priors word types
+                        'categ2' = neg,                            # Negative prior word types
                         'categ3' = nltk_stopwords,                 # Neutral word types
                         'vectors' = args$vectors,                  # On which vectors to place informative priors: rho, alpha             
                         'testset_pos' = NULL,
-                        'testset_neg' = NULL,
-                        'filename' = 'prior_info.npy')
+                        'testset_neg' = NULL)
 # -----------------------------------------------------------------
 
 
@@ -106,23 +105,13 @@ alpha <- cbind(d$dictionary, as.data.table(output$output$alpha))
 # Reset graph
 gc() ; tf$reset_default_graph()
 
-# Plot convergence plot
-conv_dt <- data.table(loss=output$output$loss)
-conv_dt[,iter:=.I]
-getwd()
-png('gutenberg_convergence.png',width=600,height=400)
-ggplot(conv_dt,aes(x=iter,y=loss)) + 
-  geom_line(col='orange') + 
-  geom_point(size=3,col='orange') +
-  xlab('Iteration') +
-  ylab('Loss') +
-  theme_minimal(base_size = 25)
-dev.off()
+# Convergence?
+plot(output$output$loss)
 # -----------------------------------------------------------------
 
 
 # -----------------------------------------------------------------
-# (8) Inspect output
+# (9) Inspect output
 # -----------------------------------------------------------------
 
 # Identify most gendered word types

@@ -16,11 +16,6 @@ options(tensorflow.extract.one_based = FALSE)
 # -----------------------------------------------------------------
 reset_d_based_on_anchored_priors <- function(args, d, prior_type=1){
   
-  ## Test
-  # args = args
-  # d = d
-  # prior_type = args$prior_type
-  
   # Identify old indices for words we want to anchor
   args <- identify_prior_idx(args = args, d = d)
   
@@ -133,58 +128,26 @@ anchored_prior_prelims <- function(m, d, args){
   # (iv) Modify "initializing vectors" for special words
   # - rho -
   if('rho' %in% args$prior_list[['vectors']]){
-    if(!args$prior_list[['prior_type']] %in% c(6,7)){
+    if(args$prior_list[['prior_type']]>=1){
       m$rho_init[m$pos_idx1, m$sdim1]       <- 1
-      m$rho_init[m$pos_idx1, 1:(m$sdim1-1)] <- 0
       m$rho_init[m$neg_idx1, m$sdim1]       <- -1
-      m$rho_init[m$neg_idx1, 1:(m$sdim1-1)] <- 0
-    }
-    # Special case -- just make absolute
-    if(args$prior_list[['prior_type']] == 7){
-      m$rho_init[m$pos_idx1, m$sdim1] <- 1
-      m$rho_init[m$neg_idx1, m$sdim1] <- -1
       m$rho_init[m$pos_idx1, 1:(m$sdim1-1)] <- 0
       m$rho_init[m$neg_idx1, 1:(m$sdim1-1)] <- 0
     }
-    if(args$prior_list[['prior_type']] %in% c(2:4,7)){
-      m$rho_init[m$pos_type2_idx1, m$sdim1] <- 1
-      m$rho_init[m$neg_type2_idx1, m$sdim1] <- -1
-    }
-    if(args$prior_list[['prior_type']] %in% c(3:7)){
+    if(args$prior_list[['prior_type']] >= 3){
       m$rho_init[m$neutral_idx1, m$sdim1] <- 0
-    }
-    if(args$prior_list[['prior_type']]==6){
-      m$rho_init[m$pos_type2_idx1, m$sdim1] <- args$mus$mu_n
-      m$rho_init[m$neg_type2_idx1, m$sdim1] <- -args$mus$mu_n
     }
   }
   # - alpha -
   if('alpha' %in% args$prior_list[['vectors']]){
-    if(!args$prior_list[['prior_type']] %in% c(6,7)){
+    if(args$prior_list[['prior_type']] >=1){
       m$alpha_init[m$pos_idx1, m$sdim1]       <- 1
-      m$alpha_init[m$pos_idx1, 1:(m$sdim1-1)] <- 0
       m$alpha_init[m$neg_idx1, m$sdim1]       <- -1
-      m$alpha_init[m$neg_idx1, 1:(m$sdim1-1)] <- 0
-    }
-    # Special case -- just make absolute?
-    if(args$prior_list[['prior_type']] == c(7)){
-      #m$alpha_init[m$pos_idx1, m$sdim1] <- (abs(m$alpha_init[m$pos_idx1, m$sdim1]))
-      #m$alpha_init[m$neg_idx1, m$sdim1] <- -1 * (abs(m$alpha_init[m$neg_idx1, m$sdim1]))
-      m$alpha_init[m$pos_idx1, m$sdim1] <- 1
-      m$alpha_init[m$neg_idx1, m$sdim1] <- -1
       m$alpha_init[m$pos_idx1, 1:(m$sdim1-1)] <- 0
       m$alpha_init[m$neg_idx1, 1:(m$sdim1-1)] <- 0
     }
-    if(args$prior_list[['prior_type']] %in% c(2,3,4,7)){
-      m$alpha_init[m$pos_type2_idx1, m$sdim1] <- 1
-      m$alpha_init[m$neg_type2_idx1, m$sdim1] <- -1
-    }
-    if(args$prior_list[['prior_type']] %in% c(3:7)){
+    if(args$prior_list[['prior_type']] >= 3){
       m$alpha_init[m$neutral_idx1, m$sdim1] <- 0
-    }
-    if(args$prior_list[['prior_type']]==6){
-      m$alpha_init[m$pos_type2_idx1, m$sdim1] <- args$mus$mu_n
-      m$alpha_init[m$neg_type2_idx1, m$sdim1] <- -args$mus$mu_n
     }
   }
   
