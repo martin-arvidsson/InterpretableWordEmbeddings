@@ -8,7 +8,7 @@ For illustrative purposes, this page provides an instructive example of how can 
 
 ### Prerequisites
 
-The implementation is based on Tensorflow and Tensorflow Probability. In case you have yet to install them, here's one way of doing it:
+The code is implemented in R, and uses Tensorflow/Tensorflow Probability. In case you have yet to install them, here's one way of doing so:
 
 ```
 # Tensorflow
@@ -24,13 +24,13 @@ install_tensorflow(
 
 ### Cloning repo and loading functions
 
-To use the code, clone the repo, set it as your working directory, and load the functions of the repository:
+To use the code, clone the repo, and load all the functions from the repository:
 
 ```
-source('src/data.R')
-source('src/init.R')
-source('src/utils.R')
-source('src/model.R')
+source('.../src/data.R')
+source('.../src/init.R')
+source('.../src/utils.R')
+source('.../src/model.R')
 ```
 
 ### Toy example
@@ -39,7 +39,7 @@ To illustrate how to use the code, we consider one of the priors described in th
 
 #### (1) Downloading, cleaning and preprocesessing
 
-As a first step, we (1.1) download the Gutenberg data using the R package ```gutenbergr```, (1.2) apply some rudimentary cleaning (e.g. remove non-alphanumeric characters, make it lower-case) and (1.3) process it for specific use with word embeddings (e.g. assign weighted negative-sampling probabilities)
+As a first step, we (1.1) download the Gutenberg data using the R package ```gutenbergr```, (1.2) apply some rudimentary cleaning (e.g. remove non-alphanumeric characters, make it lower-case) and (1.3) prepare text for word embedding estimation (e.g. create vocabulary statistics & assign weighted negative-sampling probabilities)
 
 ```
 # (1.1) Download
@@ -53,9 +53,9 @@ The result is one long text string.
 
 #### (2) Define priors
 
-Second, we select *prior specification*, and *which words* that we want to use. [Note: throughout, you'll see ```args``` appearing in the code. This is a list object storing all hyperparameters. They are set in the ```init.R``` file]
+Second, we select *prior specification*, and *which words* that we want to use as *anchored word types*. [Note: throughout, you'll see ```args``` appearing in the code. This is a list object storing all hyperparameters. They are set in the ```init.R``` file]
 
-**Prior types**:
+**Prior specifications**:
 
 * 1 = Strict Standard Basis
 * 2 = Weak Standard Basis
@@ -63,7 +63,7 @@ Second, we select *prior specification*, and *which words* that we want to use. 
 * 4 = Truncated Normal
 
 ```
-# Prior type
+# Prior specification
 args$prior_type <- 3
 
 # Example: Gender
@@ -82,7 +82,7 @@ args$prior_list <- list('prior_type' = prior_type,
 
 #### (3) Reorder matrix
 
-As a final step before estimation, we reorder the word embedding matrix, such that anchor word types occupy the first rows of the matrix. This simplifies the instantiation of priors significantly.
+As a final step before estimation, we reorder the word embedding matrix such that anchor word types occupy the first rows of the matrix. This simplifies the instantiation of priors significantly.
 
 ```
 objs <- reset_d_based_on_anchored_priors(args = args, 
