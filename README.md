@@ -43,7 +43,7 @@ As a first step, we (1.1) download the Gutenberg data using the R package ```gut
 
 ```
 # (1.1) Download
-gutenberg_sample <- dl_gutenberg_sample(n = 20, category='Bestsellers, American, 1895-1923')
+gutenberg_sample <- dl_sample_gutenberg(n = 20, category='Bestsellers, American, 1895-1923')
 # (1.2) Basic cleaning
 gutenberg_sample <- basic_cleaning(gutenberg_sample)
 # (1.3) Prepare data for word embeddings
