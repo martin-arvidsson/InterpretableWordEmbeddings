@@ -24,7 +24,7 @@ install_tensorflow(
 
 ### Cloning repo and loading functions
 
-To use the code, clone the repo, set it as your working directory, i.e. by ```setwd()```, and load the functions of the repository:
+To use the code, clone the repo, set it as your working directory, and load the functions of the repository:
 
 ```
 source('src/data.R')
@@ -35,7 +35,7 @@ source('src/model.R')
 
 ### Toy example
 
-To illustrate how to use the code, we consider one of the priors described in the paper, and apply it to the freely available Gutenberg data (https://www.gutenberg.org/). It's a great resource, check it out! 
+To illustrate how to use the code, we consider one of the priors described in the paper, and apply it to the freely available Gutenberg data (https://www.gutenberg.org/).
 
 #### (1) Downloading, cleaning and preprocesessing
 
@@ -49,11 +49,11 @@ gutenberg_sample <- basic_cleaning(gutenberg_sample)
 # (1.3) Prepare data for word embeddings
 d <- process_text_string(text_string = gutenberg_sample, vocab_size = 10000L)
 ```
-The result is one long concatenated text string that collapses all sentences, books, into one.
+The result is one long text string.
 
 #### (2) Define priors
 
-Second, we select *which prior specification* that we want to use, and *which words* that we want to use for a particular prior specification. [Note: throughout, you'll see ```args``` appearing in the code. This is a list object storing various parameters. You can find they have been set in the ```init.R``` file]
+Second, we select *prior specification*, and *which words* that we want to use. [Note: throughout, you'll see ```args``` appearing in the code. This is a list object storing all hyperparameters. They are set in the ```init.R``` file]
 
 **Prior types**:
 
@@ -67,22 +67,22 @@ Second, we select *which prior specification* that we want to use, and *which wo
 args$prior_type <- 3
 
 # Example: Gender
-garg_pos = c('he', 'son', 'his', 'him', 'father',  'boy', 'himself', 'male', 'brother', 'men', 'uncl', 'nephew')
-garg_neg = c('she', 'daughter','femen','her', 'mother', 'girl', 'herself', 'femal', 'sister', 'women','aunt', 'niec')    
-nltk_stopwords <- c('the','it', 'a','an','and','as','of','at','by')
+pos = c('he', 'son', 'his', 'him', 'father',  'boy', 'himself', 'male', 'brother', 'men', 'uncl', 'nephew')
+neg = c('she', 'daughter','femen','her', 'mother', 'girl', 'herself', 'femal', 'sister', 'women','aunt', 'niec')    
+neutral <- c('the','it', 'a','an','and','as','of','at','by')
 
 # Construct list storing information about prior
 args$prior_list <- list('prior_type' = prior_type,            
-                   'categ1' = garg_pos,                       # Positive priors word types
-                   'categ2' = garg_neg,                       # Negative prior word types
-                   'categ3' = nltk_stopwords,                 # Neutral word types
-                   'vectors' = c('rho','alpha'))              # On which vectors to place informative priors: rho, alpha         
+                        'categ1' = pos,                       # Positive priors word types
+                        'categ2' = neg,                       # Negative prior word types
+                        'categ3' = neutral,                   # Neutral word types
+                        'vectors' = c('rho','alpha'))         # On which vectors to place informative priors: rho, alpha         
 
 ```
 
-#### (3) Order matrix
+#### (3) Reorder matrix
 
-As a final step before estimation, we reorganize the word to embedding matrix. This done because it simplifies the instantiation of priors significantly.
+As a final step before estimation, we reorder the word embedding matrix, such that anchor word types occupy the first rows of the matrix. This simplifies the instantiation of priors significantly.
 
 ```
 objs <- reset_d_based_on_anchored_priors(args = args, 
@@ -99,16 +99,30 @@ In this example, we will use Gutenberg data. Please visit XXX and download YYY. 
 
 #### (4) Estimation
 
-Estimation is performed by running calling the ```anchored_embedding()``` function.
+Estimation is performed by calling the ```anchored_embedding()``` function.
 
 ```
 output <- anchored_embedding(args = args, d = d)
 ```
 
-#### (5) Convergence
+#### (5) Check convergence
+
+<!--
+![](output/gutenberg_convergence.png)
+-->
+
+<img src="output/gutenberg_convergence.png"
+ width="800px"/>
 
 #### (6) Inspect dimension
 
+<!--
+![](output/gutenberg_gender_dim.png)
+-->
+
+<img src="output/gutenberg_gender_dim.png"
+ width="800px"/>
+
 ## Acknowledgments
 
-* Our paper (and code) builds directly upon Maja Rudolph's great work on Exponention Family Embeddings (https://github.com/mariru).
+* Our paper and code builds directly on Maja Rudolph's great work on Exponention Family Embeddings (https://github.com/mariru).
