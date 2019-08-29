@@ -35,7 +35,7 @@ source('.../src/model.R')
 
 ### Toy example
 
-To illustrate how to use the code, we consider one of the priors described in the paper, and apply it to the freely available Gutenberg data (https://www.gutenberg.org/).
+To illustrate how to use the code, we consider one of the priors described in the paper, and apply it to the freely available Gutenberg data (https://www.gutenberg.org/). See ```src/main.R``` for the full script.
 
 #### (1) Downloading, cleaning and preprocesessing
 
